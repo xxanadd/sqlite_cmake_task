@@ -16,15 +16,16 @@ if(WIN32)
     message(STATUS "Building for Windows ${ARCH}")
     add_library(SQLiteLibrary SHARED ${SOURCES})
     set_target_properties(SQLiteLibrary PROPERTIES
-        OUTPUT_NAME "sqlite3"
-        PREFIX ""
+            OUTPUT_NAME "sqlite3"
+            PREFIX ""
     )
     target_compile_definitions(SQLiteLibrary PRIVATE "SQLITE_EXPORTS")
 
-    # Указываем использование MSVC
-    if (MSVC)
-        target_compile_options(SQLiteLibrary PRIVATE /W4)
+    # Указываем использование только MSVC
+    if(NOT MSVC)
+        message(FATAL_ERROR "Only MSVC compiler is supported")
     endif()
+    target_compile_options(SQLiteLibrary PRIVATE /W4)
 
 # Настройки для Linux
 elseif(UNIX)
