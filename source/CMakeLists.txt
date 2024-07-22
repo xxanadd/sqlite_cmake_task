@@ -6,6 +6,10 @@ project(SQLiteLibrary)
 # Определяем исходные файлы
 set(SOURCES sqlite3.c)
 
+# Устанавливаем папку для логов
+set(CMAKE_LOG_FILE "cmake.log")
+set(CMAKE_LOG_DIR "${CMAKE_BINARY_DIR}/logs")
+
 # Настройки для Windows
 if(WIN32)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -29,6 +33,8 @@ if(WIN32)
 
 # Настройки для Linux
 elseif(UNIX)
+    set(CMAKE_C_COMPILER "gcc")
+    set(BUILD_SHARED_LIBS ON)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         set(ARCH "x64")
     else()
@@ -39,11 +45,7 @@ elseif(UNIX)
     set_target_properties(SQLiteLibrary PROPERTIES
         OUTPUT_NAME "sqlite3"
     )
-
-    # Указываем использование GCC
-    if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
-        target_compile_options(SQLiteLibrary PRIVATE -Wall -Wextra -Wpedantic -fPIC)
-    endif()
+    target_compile_options(SQLiteLibrary PRIVATE -Wall -Wextra -Wpedantic -fPIC)
 
     # Линковка с необходимыми библиотеками
     target_link_libraries(SQLiteLibrary PRIVATE pthread dl)
